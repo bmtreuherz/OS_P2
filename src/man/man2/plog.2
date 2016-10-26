@@ -1,0 +1,46 @@
+.\" Copyright (c) 2016 Sergeant Long Dick
+.\" All rights reserved.  The Berkeley software License Agreement
+.\" specifies the terms and conditions for redistribution.
+.\"
+.\"	@(#)plog.2	1.0 (Berkeley) 9/19/16
+.\"
+.TH PLOG 2 "September 19, 2016"
+.UC 4
+.SH NAME
+start_plog, stop_plog, reset_plog, get_plog_size, get_plog_byPID,
+get_plog_byindex \- interface with the process log
+.SH SYNOPSIS
+.nf
+.ft B
+#include <unistd.h>
+
+void start_plog(void)
+void stop_plog(void)
+void reset_plog(void)
+int get_plog_size(void)
+int get_plog_byPID(int, long *, long *)
+int get_plog_byindex(int, long *, long *)
+.fi
+.SH DESCRIPTION
+.PP
+.B start_plog
+turns recording on. It is not an error if recording is already on.
+.PP
+.B stop_plog
+turns recording off. It is not an error if recording is already off.
+.PP
+.B reset_plog
+causes all entries to be cleared.
+.PP
+.B get_plog_size
+returns the size of the circular buffer.
+.PP
+.B get_plog_byPID
+takes the PID whose entry values are desired as the first argument,
+with pointers to store the creation and termination time of that process.
+If the PID is not present, it will return an error value of 2.
+.PP
+.B get_plog_byindex
+takes an index for the entry to read as the first argument, with pointers
+to store the creation time and termination time. If the index is out of range,
+it will return an error value of 3.
