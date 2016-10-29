@@ -89,7 +89,7 @@ int do_fork(message *msg)
 
   /* Tell kernel about the (now successful) FORK. */
   if((r=sys_fork(vmp->vm_endpoint, childproc,
-	&vmc->vm_endpoint, PFF_VMINHIBIT, &msgaddr)) != OK) {
+	&vmc->vm_endpoint, PFF_VMINHIBIT, &msgaddr, msg->VMF_CHILD_PID)) != OK) {
         panic("do_fork can't sys_fork: %d", r);
   }
 
@@ -115,4 +115,3 @@ int do_fork(message *msg)
   SANITYCHECK(SCL_FUNCTIONS);
   return OK;
 }
-

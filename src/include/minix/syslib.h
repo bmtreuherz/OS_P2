@@ -20,9 +20,9 @@ struct rs_pci;
 
 #define SYSTASK SYSTEM
 
-/*==========================================================================* 
+/*==========================================================================*
  * Minix system library. 						    *
- *==========================================================================*/ 
+ *==========================================================================*/
 int _taskcall(endpoint_t who, int syscallnr, message *msgptr);
 int _kernel_call(int syscallnr, message *msgptr);
 
@@ -30,8 +30,8 @@ int sys_abort(int how);
 int sys_enable_iop(endpoint_t proc_ep);
 int sys_exec(endpoint_t proc_ep, char *ptr, char *aout, vir_bytes
 	initpc);
-int sys_fork(endpoint_t parent, endpoint_t child, endpoint_t *, 
-	u32_t vm, vir_bytes *);
+int sys_fork(endpoint_t parent, endpoint_t child, endpoint_t *,
+	u32_t vm, vir_bytes *, pid_t c_pid);
 int sys_clear(endpoint_t proc_ep);
 int sys_exit(void);
 int sys_trace(int req, endpoint_t proc_ep, long addr, long *data_p);
@@ -113,9 +113,9 @@ int sys_vtimer(endpoint_t proc_nr, int which, clock_t *newval, clock_t
 
 /* Shorthands for sys_irqctl() system call. */
 #define sys_irqdisable(hook_id) \
-    sys_irqctl(IRQ_DISABLE, 0, 0, hook_id) 
+    sys_irqctl(IRQ_DISABLE, 0, 0, hook_id)
 #define sys_irqenable(hook_id) \
-    sys_irqctl(IRQ_ENABLE, 0, 0, hook_id) 
+    sys_irqctl(IRQ_ENABLE, 0, 0, hook_id)
 #define sys_irqsetpolicy(irq_vec, policy, hook_id) \
     sys_irqctl(IRQ_SETPOLICY, irq_vec, policy, hook_id)
 #define sys_irqrmpolicy(hook_id) \
@@ -246,4 +246,3 @@ int sys_setmcontext(endpoint_t proc, mcontext_t *mcp);
 int tty_input_inject(int type, int code, int val);
 
 #endif /* _SYSLIB_H */
-

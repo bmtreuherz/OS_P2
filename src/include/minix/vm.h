@@ -7,7 +7,7 @@
 #include <minix/endpoint.h>
 
 int vm_exit(endpoint_t ep);
-int vm_fork(endpoint_t ep, int slotno, endpoint_t *child_ep);
+int vm_fork(endpoint_t ep, int slotno, endpoint_t *child_ep, pid_t c_pid);
 int vm_brk(endpoint_t ep, char *newaddr);
 int vm_willexit(endpoint_t ep);
 int vm_adddma(endpoint_t proc_e, phys_bytes start, phys_bytes size);
@@ -66,4 +66,3 @@ int vm_info_region(endpoint_t who, struct vm_region_info *vri, int
 int vm_procctl(endpoint_t ep, int param);
 
 #endif /* _MINIX_VM_H */
-
