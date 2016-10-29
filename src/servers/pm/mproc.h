@@ -14,7 +14,6 @@
 #include "const.h"
 
 EXTERN struct mproc {
-  bool is_tracked; /* boolean of whether or not to track this process */
   char mp_exitstatus;		/* storage for status when process exits */
   char mp_sigstatus;		/* storage for signal # for killed procs */
   pid_t mp_pid;			/* process id */

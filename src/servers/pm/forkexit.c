@@ -73,8 +73,11 @@ int do_fork()
   if(next_child >= NR_PROCS || (mproc[next_child].mp_flags & IN_USE))
 	panic("do_fork finds wrong child slot: %d", next_child);
 
+  // Find a free pid for the child process.
+  new_pid = get_free_pid();
+
   /* Memory part of the forking. */
-  if((s=vm_fork(rmp->mp_endpoint, next_child, &child_ep)) != OK) {
+  if((s=vm_fork(rmp->mp_endpoint, next_child, &child_ep, new_pid)) != OK) {
 	return s;
   }
 
@@ -109,8 +112,7 @@ int do_fork()
   for (i = 0; i < NR_ITIMERS; i++)
 	rmc->mp_interval[i] = 0;	/* reset timer intervals */
 
-  /* Find a free pid for the child and put it in the table. */
-  new_pid = get_free_pid();
+  /* Put the child in the table. */
   rmc->mp_pid = new_pid;	/* assign pid to child */
 
   m.m_type = PM_FORK;
@@ -188,7 +190,10 @@ int do_srv_fork()
   if(next_child >= NR_PROCS || (mproc[next_child].mp_flags & IN_USE))
 	panic("do_fork finds wrong child slot: %d", next_child);
 
-  if((s=vm_fork(rmp->mp_endpoint, next_child, &child_ep)) != OK) {
+  // Find a free pid for the child process.
+  new_pid = get_free_pid();
+
+  if((s=vm_fork(rmp->mp_endpoint, next_child, &child_ep, new_pid)) != OK) {
 	return s;
   }
 
@@ -216,8 +221,7 @@ int do_srv_fork()
   for (i = 0; i < NR_ITIMERS; i++)
 	rmc->mp_interval[i] = 0;	/* reset timer intervals */
 
-  /* Find a free pid for the child and put it in the table. */
-  new_pid = get_free_pid();
+  /* Put the child in the table. */
   rmc->mp_pid = new_pid;	/* assign pid to child */
 
   m.m_type = PM_SRV_FORK;
@@ -345,7 +349,7 @@ int dump_core;			/* flag indicating whether to dump core */
 
   // Log the process termination in the plog.
   if(p_buffer.tracking_on){
-    
+
     // Get the current time since 1.1.1970
     clock_t uptime, boottime;
     int s;
