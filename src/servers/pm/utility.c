@@ -224,10 +224,10 @@ int get_pbuffer_size(){
   return p_buffer.full ? PLOG_BUFFER_SIZE : p_buffer.index;
 }
 
-int start_tracking(pid_t pid){
-  
+int start_tracking(pid_t c_pid){
+  return 0;
 }
 
-int stop_tracking(pid_t pid){
-
+int stop_tracking(pid_t c_pid){
+  return 0;
 }

@@ -42,8 +42,8 @@
  *                              get_mem_chunks                               *
  *===========================================================================*/
 void get_mem_chunks(mem_chunks)
-struct memory *mem_chunks;                      /* store mem chunks here */ 
-{  
+struct memory *mem_chunks;                      /* store mem chunks here */
+{
 /* Initialize the free memory list from the 'memory' boot variable.  Translate
  * the byte offsets and sizes in this list to clicks, properly truncated.
  */
@@ -52,9 +52,9 @@ struct memory *mem_chunks;                      /* store mem chunks here */
   struct memory *memp;
 
   /* Obtain and parse memory from system environment. */
-  if(env_memory_parse(mem_chunks, NR_MEMS) != OK) 
-        panic("couldn't obtain memory chunks"); 
-        
+  if(env_memory_parse(mem_chunks, NR_MEMS) != OK)
+        panic("couldn't obtain memory chunks");
+
   /* Round physical memory to clicks. Round start up, round end down. */
   for (i = 0; i < NR_MEMS; i++) {
         memp = &mem_chunks[i];          /* next mem chunk is stored here */
@@ -65,12 +65,12 @@ struct memory *mem_chunks;                      /* store mem chunks here */
         limit = (phys_bytes) (CLICK_FLOOR(limit));
         if (limit <= base) {
                 memp->base = memp->size = 0;
-        } else { 
+        } else {
                 memp->base = base >> CLICK_SHIFT;
                 memp->size = (limit - base) >> CLICK_SHIFT;
         }
   }
-}  
+}
 
 /*===========================================================================*
  *                              vm_isokendpt                           	     *
@@ -78,12 +78,20 @@ struct memory *mem_chunks;                      /* store mem chunks here */
 int vm_isokendpt(endpoint_t endpoint, int *proc)
 {
         *proc = _ENDPOINT_P(endpoint);
-        if(*proc < 0 || *proc >= NR_PROCS)
-		return EINVAL;
-        if(*proc >= 0 && endpoint != vmproc[*proc].vm_endpoint)
-                return EDEADEPT;
-        if(*proc >= 0 && !(vmproc[*proc].vm_flags & VMF_INUSE))
-                return EDEADEPT;
+        if(*proc < 0 || *proc >= NR_PROCS){
+          printf("A %d : %d\n", msg->VMF_ENDPOINT, msg->VMF_CHILD_PID);
+  		    return EINVAL;
+        }
+
+        if(*proc >= 0 && endpoint != vmproc[*proc].vm_endpoint){
+          printf("B %d : %d\n", msg->VMF_ENDPOINT, msg->VMF_CHILD_PID);
+          return EDEADEPT;
+        }
+        if(*proc >= 0 && !(vmproc[*proc].vm_flags & VMF_INUSE)){
+          printf("C %d : %d\n", msg->VMF_ENDPOINT, msg->VMF_CHILD_PID);
+          return EDEADEPT;
+        }
+        printf("D %d : %d\n", msg->VMF_ENDPOINT, msg->VMF_CHILD_PID);
         return OK;
 }
 
@@ -315,5 +323,3 @@ int _brk(void *addr)
 
 	return 0;
 }
-
-

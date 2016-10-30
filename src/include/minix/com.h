@@ -535,7 +535,7 @@
 #define PR_FORK_FLAGS	m1_i3	/* optional flags for fork operation */
 #define PR_FORK_MSGADDR m1_p1	/* reply message address of forked child */
 #define PR_CTX_PTR	m1_p1	/* pointer to mcontext_t structure */
-#define PR_CHILD_PID m2_i1;
+#define PR_CHILD_PID m2_i1
 
 /* Field names for EXEC sent from userland to PM. */
 #define PMEXEC_FLAGS	m1_i3	/* PMEF_* */
@@ -915,7 +915,7 @@
 #	define VMF_ENDPOINT		m1_i1
 #	define VMF_SLOTNO		m1_i2
 #	define VMF_CHILD_ENDPOINT	m1_i3	/* result */
-# define VMF_CHILD_PID m2_i1;
+# define VMF_CHILD_PID m2_i1
 #define VM_BRK			(VM_RQ_BASE+2)
 #	define VMB_ENDPOINT		m1_i1
 #	define VMB_ADDR			m1_p1
