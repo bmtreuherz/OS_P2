@@ -76,6 +76,9 @@ int do_fork()
   // Find a free pid for the child process.
   new_pid = get_free_pid();
 
+
+  printf("SERVER_FORK_EXIT PID: %d\n", new_pid);
+
   /* Memory part of the forking. */
   if((s=vm_fork(rmp->mp_endpoint, next_child, &child_ep, new_pid)) != OK) {
 	return s;

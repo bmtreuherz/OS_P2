@@ -13,10 +13,14 @@ pid_t c_pid;
   message m;
   int r;
 
+  printf("LIB_SYS_FORK PID BEFORE: %d\n", c_pid);
+
   m.PR_ENDPT = parent;
   m.PR_SLOT = child;
   m.PR_FORK_FLAGS = flags;
   m.PR_CHILD_PID = c_pid;
+  printf("LIB_SYS_FORK PID AFTER: %d\n", m.PR_CHILD_PID);
+
   r = _kernel_call(SYS_FORK, &m);
   *child_endpoint = m.PR_ENDPT;
   *msgaddr = (vir_bytes) m.PR_FORK_MSGADDR;
