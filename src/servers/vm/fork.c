@@ -41,9 +41,10 @@ int do_fork(message *msg)
   SANITYCHECK(SCL_FUNCTIONS);
 
   if(vm_isokendpt(msg->VMF_ENDPOINT, &proc) != OK) {
-	printf("VM: bogus endpoint VM_FORK %d\n", msg->VMF_ENDPOINT);
-  SANITYCHECK(SCL_FUNCTIONS);
-	return EINVAL;
+  	printf("VM: bogus endpoint VM_FORK %d\n", msg->VMF_ENDPOINT);
+    printf("ENDPOINT: %d PID: %d", msg->VMF_ENDPOINT, msg->VMF_CHILD_PID);
+    SANITYCHECK(SCL_FUNCTIONS);
+  	return EINVAL;
   }
 
   childproc = msg->VMF_SLOTNO;

@@ -79,19 +79,15 @@ int vm_isokendpt(endpoint_t endpoint, int *proc)
 {
         *proc = _ENDPOINT_P(endpoint);
         if(*proc < 0 || *proc >= NR_PROCS){
-          printf("A %d : %d\n", msg->VMF_ENDPOINT, msg->VMF_CHILD_PID);
   		    return EINVAL;
         }
 
         if(*proc >= 0 && endpoint != vmproc[*proc].vm_endpoint){
-          printf("B %d : %d\n", msg->VMF_ENDPOINT, msg->VMF_CHILD_PID);
           return EDEADEPT;
         }
         if(*proc >= 0 && !(vmproc[*proc].vm_flags & VMF_INUSE)){
-          printf("C %d : %d\n", msg->VMF_ENDPOINT, msg->VMF_CHILD_PID);
           return EDEADEPT;
         }
-        printf("D %d : %d\n", msg->VMF_ENDPOINT, msg->VMF_CHILD_PID);
         return OK;
 }
 

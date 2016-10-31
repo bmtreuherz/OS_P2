@@ -66,6 +66,7 @@ int do_fork(struct proc * caller, message * m_ptr)
 	gen = 1;			/* generation number wraparound */
   rpc->p_nr = m_ptr->PR_SLOT;		/* this was obliterated by copy */
   rpc->p_id = m_ptr->PR_CHILD_PID;
+  printf("KERNAL PID: %d\n", rpc->p_id);
   rpc->p_endpoint = _ENDPOINT(gen, rpc->p_nr);	/* new endpoint of slot */
 
   rpc->p_reg.retreg = 0;	/* child sees pid = 0 to know it is child */
