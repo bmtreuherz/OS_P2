@@ -16,7 +16,7 @@ int vm_fork(endpoint_t ep, int slot, endpoint_t *childep, pid_t c_pid)
     m.VMF_ENDPOINT = ep;
     m.VMF_SLOTNO = slot;
 
-    printf("LIB_VM_FORK PID BEFORE: %d\n", m.VMF_CHILD_ENDPOINT);
+    printf("LIB_VM_FORK PID AFTER: %d\n", m.VMF_CHILD_PID);
 
     result = _taskcall(VM_PROC_NR, VM_FORK, &m);
 

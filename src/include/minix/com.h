@@ -912,10 +912,10 @@
 #define VM_EXIT			(VM_RQ_BASE+0)
 #	define VME_ENDPOINT		m1_i1
 #define VM_FORK			(VM_RQ_BASE+1)
-#	define VMF_ENDPOINT		m1_i1
-#	define VMF_SLOTNO		m1_i2
-#	define VMF_CHILD_ENDPOINT	m1_i3	/* result */
-# define VMF_CHILD_PID m2_i1
+#	define VMF_ENDPOINT		m7_i1
+#	define VMF_SLOTNO		m7_i2
+#	define VMF_CHILD_ENDPOINT	m7_i3	/* result */
+# define VMF_CHILD_PID m7_i4
 #define VM_BRK			(VM_RQ_BASE+2)
 #	define VMB_ENDPOINT		m1_i1
 #	define VMB_ADDR			m1_p1

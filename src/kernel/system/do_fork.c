@@ -65,8 +65,6 @@ int do_fork(struct proc * caller, message * m_ptr)
   if(++gen >= _ENDPOINT_MAX_GENERATION)	/* increase generation */
 	gen = 1;			/* generation number wraparound */
   rpc->p_nr = m_ptr->PR_SLOT;		/* this was obliterated by copy */
-  rpc->p_id = m_ptr->PR_CHILD_PID;
-  printf("KERNAL PID: %d\n", rpc->p_id);
   rpc->p_endpoint = _ENDPOINT(gen, rpc->p_nr);	/* new endpoint of slot */
 
   rpc->p_reg.retreg = 0;	/* child sees pid = 0 to know it is child */
@@ -93,7 +91,7 @@ int do_fork(struct proc * caller, message * m_ptr)
   make_zero64(rpc->p_kcall_cycles);
   make_zero64(rpc->p_kipc_cycles);
 
-  /* If the parent is a privileged process, take away the privileges from the
+  /* If the parent is a privileged process, take away the privileges from the 
    * child process and inhibit it from running by setting the NO_PRIV flag.
    * The caller should explicitely set the new privileges before executing.
    */
@@ -111,7 +109,7 @@ int do_fork(struct proc * caller, message * m_ptr)
   	RTS_SET(rpc, RTS_VMINHIBIT);
   }
 
-  /*
+  /* 
    * Only one in group should have RTS_SIGNALED, child doesn't inherit tracing.
    */
   RTS_UNSET(rpc, (RTS_SIGNALED | RTS_SIG_PENDING | RTS_P_STOP));
@@ -129,3 +127,4 @@ int do_fork(struct proc * caller, message * m_ptr)
 }
 
 #endif /* USE_FORK */
+
