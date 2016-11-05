@@ -537,6 +537,12 @@
 #define PR_CTX_PTR	m1_p1	/* pointer to mcontext_t structure */
 #define PR_CHILD_PID m2_i1
 
+#define PRN_ENDPT m7_i1
+#define PRN_SLOT m7_i2
+#define PRN_FORK_FLAGS m7_i3
+#define PRN_CHILD_PID m7_i4
+#define PRN_FORK_MSGADDR m7_p1
+
 /* Field names for EXEC sent from userland to PM. */
 #define PMEXEC_FLAGS	m1_i3	/* PMEF_* */
 

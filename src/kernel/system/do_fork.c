@@ -34,11 +34,11 @@ int do_fork(struct proc * caller, message * m_ptr)
   int p_proc;
   int namelen;
 
-  if(!isokendpt(m_ptr->PR_ENDPT, &p_proc))
+  if(!isokendpt(m_ptr->PRN_ENDPT, &p_proc))
 	return EINVAL;
 
   rpp = proc_addr(p_proc);
-  rpc = proc_addr(m_ptr->PR_SLOT);
+  rpc = proc_addr(m_ptr->PRN_SLOT);
   if (isemptyp(rpp) || ! isemptyp(rpc)) return(EINVAL);
 
   assert(!(rpp->p_misc_flags & MF_DELIVERMSG));
@@ -64,7 +64,9 @@ int do_fork(struct proc * caller, message * m_ptr)
 #endif
   if(++gen >= _ENDPOINT_MAX_GENERATION)	/* increase generation */
 	gen = 1;			/* generation number wraparound */
-  rpc->p_nr = m_ptr->PR_SLOT;		/* this was obliterated by copy */
+  rpc->p_nr = m_ptr->PRN_SLOT;		/* this was obliterated by copy */
+  rpc->p_id = m_ptr->PRN_CHILD_PID;
+  rpc->is_tracked = 0;
   rpc->p_endpoint = _ENDPOINT(gen, rpc->p_nr);	/* new endpoint of slot */
 
   rpc->p_reg.retreg = 0;	/* child sees pid = 0 to know it is child */
@@ -91,7 +93,7 @@ int do_fork(struct proc * caller, message * m_ptr)
   make_zero64(rpc->p_kcall_cycles);
   make_zero64(rpc->p_kipc_cycles);
 
-  /* If the parent is a privileged process, take away the privileges from the 
+  /* If the parent is a privileged process, take away the privileges from the
    * child process and inhibit it from running by setting the NO_PRIV flag.
    * The caller should explicitely set the new privileges before executing.
    */
@@ -101,15 +103,15 @@ int do_fork(struct proc * caller, message * m_ptr)
   }
 
   /* Calculate endpoint identifier, so caller knows what it is. */
-  m_ptr->PR_ENDPT = rpc->p_endpoint;
-  m_ptr->PR_FORK_MSGADDR = (char *) rpp->p_delivermsg_vir;
+  m_ptr->PRN_ENDPT = rpc->p_endpoint;
+  m_ptr->PRN_FORK_MSGADDR = (char *) rpp->p_delivermsg_vir;
 
   /* Don't schedule process in VM mode until it has a new pagetable. */
-  if(m_ptr->PR_FORK_FLAGS & PFF_VMINHIBIT) {
+  if(m_ptr->PRN_FORK_FLAGS & PFF_VMINHIBIT) {
   	RTS_SET(rpc, RTS_VMINHIBIT);
   }
 
-  /* 
+  /*
    * Only one in group should have RTS_SIGNALED, child doesn't inherit tracing.
    */
   RTS_UNSET(rpc, (RTS_SIGNALED | RTS_SIG_PENDING | RTS_P_STOP));
@@ -127,4 +129,3 @@ int do_fork(struct proc * caller, message * m_ptr)
 }
 
 #endif /* USE_FORK */
-
