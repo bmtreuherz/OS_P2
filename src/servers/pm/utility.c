@@ -223,11 +223,3 @@ plog_item find_process_by_pid(pid_t mpid, int *index){
 int get_pbuffer_size(){
   return p_buffer.full ? PLOG_BUFFER_SIZE : p_buffer.index;
 }
-
-int start_tracking(pid_t c_pid){
-  return 0;
-}
-
-int stop_tracking(pid_t c_pid){
-  return 0;
-}

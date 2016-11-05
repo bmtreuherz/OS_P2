@@ -62,14 +62,49 @@ int internal_get_plog_by_index(){
   return 0;
 }
 
-int internal_plog_state_start(){
+int internal_plog_state(int state){
   pid_t mpid = m_in.m2_i1;
-  return start_tracking(mpid);
+  int pm_result, k_result;
+
+  // Modify the is_tracking for the process(es) in the PM table.
+  if(mpid == 0){
+    // If the PID is 0, set the tracking state for all processes in the table
+    internal_set_all_state(state);
+    pm_result = 0;
+  }else{
+    register struct mproc *rmp = find_proc(mpid);
+    if(rmp != NULL){
+      rmp->is_tracked = state;
+      pm_result = 0;
+    }else{
+      pm_result = 1;
+    }
+  }
+
+  k_result = kernal_plog_state(mpid, state);
+
+  printf("PTRACKING: PID:%d STATE:%d PM_RES:%d K_RES%d\n", mpid, state, pm_result, k_result);
+  if(pm_result == k_result){
+    return pm_result;
+  }else if(pm_result == 0 && k_result != 0){
+    return k_result;
+  }else if(pm_result != 0 && k_result == 0){
+    return pm_result;
+  }else{
+    // This last case will occur when the process was not found in the pm table,
+    // but was found to be a non user proccess in the kernal table.
+    return k_result;
+  }
 }
 
-int internal_plog_state_stop(){
-  pid_t mpid = m_in.m2_i1;
-  return stop_tracking(mpid);
+int internal_set_all_state(int state){
+  register struct mproc *rmp;
+
+  for (rmp = &mproc[0]; rmp < &mproc[NR_PROCS]; rmp++){
+    if (rmp->mp_flags & IN_USE){
+      rmp->is_tracked = state;
+    }
+  }
 }
 
 int do_plog(){
@@ -96,10 +131,10 @@ int do_plog(){
       result = internal_get_plog_by_index();
       break;
     case PLOGSTATESTART:
-      result = internal_plog_state_start();
+      result = internal_plog_state(1);
       break;
     case PLOGSTATESTOP:
-      result = internal_plog_state_stop();
+      result = internal_plog_state(0);
       break;
     default:
       result = -1;

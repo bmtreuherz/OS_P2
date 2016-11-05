@@ -13,16 +13,12 @@ pid_t c_pid;
   message m;
   int r;
 
-  printf("LIB_SYS_FORK PID BEFORE: %d\n", c_pid);
-
   m.PRN_ENDPT = parent;
   m.PRN_SLOT = child;
   m.PRN_FORK_FLAGS = flags;
   m.PRN_CHILD_PID = c_pid;
-  printf("LIB_SYS_FORK PID AFTER: %d\n", m.PRN_CHILD_PID);
 
   r = _kernel_call(SYS_FORK, &m);
-  printf("RESULT IS: %d", r); 
   *child_endpoint = m.PRN_ENDPT;
   *msgaddr = (vir_bytes) m.PRN_FORK_MSGADDR;
   return r;

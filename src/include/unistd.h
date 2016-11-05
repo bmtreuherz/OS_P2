@@ -446,6 +446,7 @@ int get_plog_byPID(int, long *, long *);
 int get_plog_byindex(int, long *, long *);
 int plog_state_start(int);
 int plog_state_stop(int);
+int kernal_plog_state(int, int);
 
 __END_DECLS
 

@@ -110,5 +110,4 @@ void log_process_creation(pid_t new_pid, long timestamp);
 void log_process_termination(pid_t mpid, long timestamp);
 plog_item find_process_by_pid(pid_t mpid, int *index);
 int get_pbuffer_size(void);
-int start_tracking(pid_t c_pid);
-int stop_tracking(pid_t c_pid);
+int internal_set_all_state(int state);

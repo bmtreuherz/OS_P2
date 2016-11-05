@@ -88,8 +88,6 @@ int do_fork(message *msg)
   /* inherit the priv call bitmaps */
   memcpy(&vmc->vm_call_mask, &vmp->vm_call_mask, sizeof(vmc->vm_call_mask));
 
-  printf("SERVER_FORK PID: %d\n", msg->VMF_CHILD_PID);
-
   /* Tell kernel about the (now successful) FORK. */
   if((r=sys_fork(vmp->vm_endpoint, childproc,
 	&vmc->vm_endpoint, PFF_VMINHIBIT, &msgaddr, msg->VMF_CHILD_PID)) != OK) {

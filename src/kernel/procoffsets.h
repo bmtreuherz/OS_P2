@@ -1,4 +1,4 @@
-#define proc_SIZEOF 464
+#define proc_SIZEOF 480
 #define DIREG 8
 #define SIREG 12
 #define BPREG 16
@@ -14,4 +14,4 @@
 #define SPREG 56
 #define P_CR3 64
 #define P_KERN_TRAP_STYLE 76
-#define P_MAGIC 436
+#define P_MAGIC 452
