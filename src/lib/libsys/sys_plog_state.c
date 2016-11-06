@@ -8,7 +8,6 @@ int state;
   m.m2_i1 = mpid;
   m.m2_i2 = state;
 
-  // TODO: Make a kernal call here brah.
-  printf("Kernal call would be made here bruh!\n");
-  return 0;
+  _kernel_call(SYS_PLOG_STATE, &m);
+  return m.m2_i3; // Result is stored here.
 }

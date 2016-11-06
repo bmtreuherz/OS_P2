@@ -82,9 +82,15 @@ int internal_plog_state(int state){
     }
   }
 
+  // TODO: REMOVE AFTER DEBUGGING
+  printf("PM PROCESS TABLE\n");
+  for (rmp = &mproc[0]; rmp < &mproc[NR_PROCS]; rmp++){
+    printf("PID: %d\tTRACKED: %d\n", rmp->mp_pid, rmp->is_tracked);
+  }
+
   k_result = sys_plog_state(mpid, state);
 
-  printf("PTRACKING: PID:%d STATE:%d PM_RES:%d K_RES%d\n", mpid, state, pm_result, k_result);
+  printf("PTRACKING: PID:%d STATE:%d PM_RES:%d K_RES:%d\n", mpid, state, pm_result, k_result);
   if(pm_result == k_result){
     return pm_result;
   }else if(pm_result == 0 && k_result != 0){
@@ -102,9 +108,7 @@ int internal_set_all_state(int state){
   register struct mproc *rmp;
 
   for (rmp = &mproc[0]; rmp < &mproc[NR_PROCS]; rmp++){
-    if (rmp->mp_flags & IN_USE){
-      rmp->is_tracked = state;
-    }
+    rmp->is_tracked = state;
   }
 }
 
