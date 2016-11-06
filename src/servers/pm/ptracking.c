@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <minix/callnr.h>
+#include <minix/syslib.h>
 #include "pm.h"
 #include "mproc.h"
 #include "param.h"
@@ -81,7 +82,7 @@ int internal_plog_state(int state){
     }
   }
 
-  k_result = kernal_plog_state(mpid, state);
+  k_result = sys_plog_state(mpid, state);
 
   printf("PTRACKING: PID:%d STATE:%d PM_RES:%d K_RES%d\n", mpid, state, pm_result, k_result);
   if(pm_result == k_result){
