@@ -6,8 +6,8 @@
   *===========================================================================*/
 int do_plog_state(struct proc *caller_ptr, message *m_ptr)
 {
-  pid_t mpid = m2_i1;
-  int state = m2_i2;
+  pid_t mpid = m_ptr->m2_i1;
+  int state = m_ptr->m2_i2;
   int result = 1;
   register struct proc *rmp;
 
@@ -29,12 +29,6 @@ int do_plog_state(struct proc *caller_ptr, message *m_ptr)
         break;
       }
     }
-  }
-
-  // TODO: REMOVE AFTER DEBUGGING
-  printf("KERNAL TABLE\n")
-  for (rmp = &proc[0]; rmp < &proc[NR_TASKS + NR_PROCS]; rmp++){
-    prinf("PID: %d\tTRACKED: %d\n", rmp->p_id, rmp->is_tracked);
   }
 
   m_ptr->m2_i3 = result;

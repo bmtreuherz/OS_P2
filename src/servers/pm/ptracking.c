@@ -66,6 +66,7 @@ int internal_get_plog_by_index(){
 int internal_plog_state(int state){
   pid_t mpid = m_in.m2_i1;
   int pm_result, k_result;
+  register struct mproc *rmp;
 
   // Modify the is_tracking for the process(es) in the PM table.
   if(mpid == 0){
@@ -73,19 +74,13 @@ int internal_plog_state(int state){
     internal_set_all_state(state);
     pm_result = 0;
   }else{
-    register struct mproc *rmp = find_proc(mpid);
+    rmp = find_proc(mpid);
     if(rmp != NULL){
       rmp->is_tracked = state;
       pm_result = 0;
     }else{
       pm_result = 1;
     }
-  }
-
-  // TODO: REMOVE AFTER DEBUGGING
-  printf("PM PROCESS TABLE\n");
-  for (rmp = &mproc[0]; rmp < &mproc[NR_PROCS]; rmp++){
-    printf("PID: %d\tTRACKED: %d\n", rmp->mp_pid, rmp->is_tracked);
   }
 
   k_result = sys_plog_state(mpid, state);
