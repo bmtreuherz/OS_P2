@@ -33,12 +33,12 @@ SRCS+= 	\
 	do_abort.c \
 	do_getinfo.c \
 	do_cprofile.c \
+	do_plog_state.c \
 	do_profbuf.c \
 	do_vmctl.c \
 	do_schedule.c \
 	do_schedctl.c \
-	do_statectl.c \
-	do_plog_state.c
+	do_statectl.c
 
 .if ${MACHINE_ARCH} == "i386"
 SRCS+=  \
