@@ -66,6 +66,7 @@ int do_fork(struct proc * caller, message * m_ptr)
 	gen = 1;			/* generation number wraparound */
   rpc->p_nr = m_ptr->PRN_SLOT;		/* this was obliterated by copy */
   rpc->p_id = m_ptr->PRN_CHILD_PID;
+  rpc->p_state = 1; // Mark state as ready
   rpc->is_tracked = 0;
   rpc->p_endpoint = _ENDPOINT(gen, rpc->p_nr);	/* new endpoint of slot */
 

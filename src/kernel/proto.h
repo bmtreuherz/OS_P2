@@ -222,6 +222,7 @@ void busy_delay_ms(int ms);
 
 /* utility.c */
 void cpu_print_freq(unsigned cpu);
+void log_state_change(pid_t p_id, int from, int to);
 #endif /* __kernel__ */
 
 #endif /* PROTO_H */

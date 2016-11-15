@@ -1526,6 +1526,7 @@ void enqueue(
  * This function can be used x-cpu as it always uses the queues of the cpu the
  * process is assigned to.
  */
+
   int q = rp->p_priority;	 		/* scheduling queue to use */
   struct proc **rdy_head, **rdy_tail;
 
@@ -1578,6 +1579,11 @@ void enqueue(
 #if DEBUG_SANITYCHECKS
   assert(runqueues_ok_local());
 #endif
+
+	if(rp->is_tracked){
+		log_state_change(rp->p_id, rp->p_state, 1);
+		rp->p_state = 1;
+	}
 }
 
 /*===========================================================================*
@@ -1591,6 +1597,7 @@ void enqueue(
  */
 static void enqueue_head(struct proc *rp)
 {
+
   const int q = rp->p_priority;	 		/* scheduling queue to use */
 
   struct proc **rdy_head, **rdy_tail;
@@ -1630,6 +1637,11 @@ static void enqueue_head(struct proc *rp)
 #if DEBUG_SANITYCHECKS
   assert(runqueues_ok_local());
 #endif
+
+	if(rp->is_tracked){
+		log_state_change(rp->p_id, rp->p_state, 1);
+		rp->p_state = 1;
+	}
 }
 
 /*===========================================================================*
@@ -1645,6 +1657,7 @@ void dequeue(struct proc *rp)
  * This function can operate x-cpu as it always removes the process from the
  * queue of the cpu the process is currently assigned to.
  */
+
   int q = rp->p_priority;		/* queue to use */
   struct proc **xpp;			/* iterate over queue */
   struct proc *prev_xp;
@@ -1693,10 +1706,13 @@ void dequeue(struct proc *rp)
 	make_zero64(rp->p_accounting.enter_queue);
   }
 
-
 #if DEBUG_SANITYCHECKS
   assert(runqueues_ok_local());
 #endif
+	if(rp->is_tracked){
+		log_state_change(rp->p_id, rp->p_state, 3);
+		rp->p_state = 3;
+	}
 }
 
 /*===========================================================================*
@@ -1720,14 +1736,20 @@ static struct proc * pick_proc(void)
    */
   rdy_head = get_cpulocal_var(run_q_head);
   for (q=0; q < NR_SCHED_QUEUES; q++) {
-	if(!(rp = rdy_head[q])) {
-		TRACE(VF_PICKPROC, printf("cpu %d queue %d empty\n", cpuid, q););
-		continue;
-	}
-	assert(proc_is_runnable(rp));
-	if (priv(rp)->s_flags & BILLABLE)
-		get_cpulocal_var(bill_ptr) = rp; /* bill for system time */
-	return rp;
+		if(!(rp = rdy_head[q])) {
+			TRACE(VF_PICKPROC, printf("cpu %d queue %d empty\n", cpuid, q););
+			continue;
+		}
+		assert(proc_is_runnable(rp));
+
+		if (priv(rp)->s_flags & BILLABLE)
+			get_cpulocal_var(bill_ptr) = rp; /* bill for system time */
+
+		// if(rp->is_tracked){
+		// 	log_state_change(rp->p_id, rp->p_state, 2);
+		// 	rp->p_state = 2;
+		// }
+		return rp;
   }
   return NULL;
 }

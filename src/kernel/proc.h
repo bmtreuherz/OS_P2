@@ -23,6 +23,7 @@ struct proc {
   struct stackframe_s p_reg;	/* process' registers saved in stack frame */
   struct segframe p_seg;	/* segment descriptors */
   proc_nr_t p_nr;		/* number of this process (for fast access) */
+  int p_state; /* process state 0:new 1:rdy 2:run 3: blk 4: trm TODO: Shoudl make this an enum instead */
   pid_t p_id; /* process id */
   int is_tracked; /* indicates if the process is being tracked */
   struct priv *p_priv;		/* system privileges structure */

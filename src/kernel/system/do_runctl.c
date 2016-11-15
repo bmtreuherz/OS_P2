@@ -41,6 +41,12 @@ int do_runctl(struct proc * caller, message * m_ptr)
    * should not also install signal handlers *and* expect POSIX compliance.
    */
 
+  if(action == RC_STOP && rp->is_tracked){
+    // log that the process has terminated
+    log_state_change(rp->p_id, rp->p_state, 4);
+  	rp->p_state = 4;
+  }
+
   if (action == RC_STOP && (flags & RC_DELAY)) {
 	if (RTS_ISSET(rp, RTS_SENDING) || (rp->p_misc_flags & MF_SC_DEFER))
 		rp->p_misc_flags |= MF_SIG_DELAY;
@@ -73,4 +79,3 @@ int do_runctl(struct proc * caller, message * m_ptr)
 }
 
 #endif /* USE_RUNCTL */
-
