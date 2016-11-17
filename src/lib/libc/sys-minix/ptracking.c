@@ -1,5 +1,6 @@
 #include <lib.h>
 #include <unistd.h>
+#include <stdio.h>
 
 void start_plog(){
   message m;
@@ -12,6 +13,12 @@ void stop_plog(){
 }
 
 void reset_plog(){
+
+  // TODO: REMOVE THIS
+  // FILE *fp;
+  // fp = fopen("file.txt", "w+");
+  // fprintf(fp, "Printing in this file");
+  // fclose(fp);
   message m;
   _syscall(PM_PROC_NR, RESETPLOG, &m);
 }

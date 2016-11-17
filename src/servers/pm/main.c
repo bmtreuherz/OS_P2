@@ -51,6 +51,46 @@ static void sef_local_startup(void);
 static int sef_cb_init_fresh(int type, sef_init_info_t *info);
 static int sef_cb_signal_manager(endpoint_t target, int signo);
 
+
+// void *query_log(void *arg)
+// {
+// 	while(1){
+// 		printf("In thread loop hayooo!\n");
+// 		sleep(1);
+// 	}
+// 	/* the function must return something - NULL will do */
+// 	return NULL;
+// }
+//
+// void start_ptracking_log(){
+// 	/* this variable is our reference to the second thread */
+// 	pthread_t log_thread;
+// 	/* create a second thread which executes inc_x(&x) */
+// 	if(pthread_create(&log_thread, NULL, query_log, NULL)) {
+// 		fprintf(stderr, "Error creating thread\n");
+// 		return 1;
+// 	}
+// }
+
+
+// void query_log()
+// {
+// 	while(1){
+// 		printf("In thread loop hayooo!\n");
+// 		sleep(1);
+// 	}
+// }
+//
+// void start_ptracking_log()
+// {
+// 	int query_pid = fork();
+// 	printf("Gonna start looping here hopefully");
+// 	if(query_pid == 0){
+// 		setsid();
+// 		query_log();
+// 	}
+// }
+
 /*===========================================================================*
  *				main					     *
  *===========================================================================*/
@@ -149,6 +189,8 @@ int main()
 	if (result != SUSPEND) setreply(who_p, result);
 	sendreply();
   }
+
+	// start_ptracking_log();
   return(OK);
 }
 

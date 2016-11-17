@@ -1,9 +1,13 @@
-#include <stdio.h>
 #include <minix/callnr.h>
 #include <minix/syslib.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include "pm.h"
 #include "mproc.h"
 #include "param.h"
+#include <stdio.h>
+
+// int logging_process_running = 0;
 
 int internal_start_plog(){
   p_buffer.tracking_on = 1;
@@ -63,10 +67,42 @@ int internal_get_plog_by_index(){
   return 0;
 }
 
+// void query_log()
+// {
+// 	while(1){
+//     // FILE *fp;
+//     // x = x % 10;
+//     // fp = fopen("file.txt", "w+");
+//     // fprintf(fp, "Printing in this file %d", x);
+//     // fclose(fp);
+//     reset_plog(); // THIS SHOULD NOT BE THE CALL THAT GETS MADE BUT FUCK IT FOR NOW
+// 		printf("In thread loop hayooo!\n");
+// 		sleep(2);
+// 	}
+// }
+//
+// void start_ptracking_log()
+// {
+// 	int query_pid = fork();
+// 	printf("Gonna start looping here hopefully\n");
+// 	if(query_pid == 0){
+//     printf("Child process here\n");
+//     message m;
+//     _syscall(PM_PROC_NR, SETSID, &m);
+//     printf("After syscall\n");
+// 		query_log();
+// 	}
+// }
+
 int internal_plog_state(int state){
   pid_t mpid = m_in.m2_i1;
   int pm_result, k_result;
   register struct mproc *rmp;
+
+  // if(logging_process_running == 0){
+  //   start_ptracking_log();
+  //   logging_process_running = 1;
+  // }
 
   // Modify the is_tracking for the process(es) in the PM table.
   if(mpid == 0){
@@ -88,7 +124,10 @@ int internal_plog_state(int state){
   printf("PTRACKING: PID:%d STATE:%d PM_RES:%d K_RES:%d\n", mpid, state, pm_result, k_result);
   if(pm_result == k_result){
     return pm_result;
-  }else if(pm_result == 0 && k_result != 0){
+  }else if(pm_result == 0 && k_result == 1){
+    // This must be a system process.
+    return 2;
+  }else if(pm_result == 0 && k_result == 2){
     return k_result;
   }else if(pm_result != 0 && k_result == 0){
     return pm_result;

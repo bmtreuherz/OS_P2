@@ -12,6 +12,12 @@
 
 #if USE_RUNCTL
 
+int get_plog_time_(){
+	int boottime_ms = boottime*1000;
+	int realtime_ms = (get_uptime() * 1000)/system_hz;
+	return boottime_ms + realtime_ms;
+}
+
 /*===========================================================================*
  *				  do_runctl				     *
  *===========================================================================*/
@@ -43,7 +49,8 @@ int do_runctl(struct proc * caller, message * m_ptr)
 
   if(action == RC_STOP && rp->is_tracked){
     // log that the process has terminated
-    log_state_change(rp->p_id, rp->p_state, 4);
+    clock_t timestamp = get_plog_time_();
+    log_state_change(rp->p_id, timestamp, rp->p_state, 4);
   	rp->p_state = 4;
   }
 

@@ -14,6 +14,9 @@
 
 #include <minix/sys_config.h>
 
+#include <minix/sysutil.h>
+#include <stdio.h>
+
 #define ARE_PANICING 0xDEADC0FF
 
 /*===========================================================================*
@@ -113,29 +116,50 @@ char* get_state_string(int state){
   }
 }
 
-void log_state_change(pid_t p_id, int from, int to){
-  // Calculate timestamp
-  // clock_t uptime, boottime;
-  // int s;
-  //
-  // if ( (s=getuptime2(&uptime, &boottime)) != OK)
-  //   panic("do_time couldn't get uptime: %d", s);
-  //
-  // long timestamp = (time_t) (boottime + (uptime/system_hz));
-  // long timestamp = (time_t) (boottime + (get_uptime()/system_hz));
 
-  // clock_t timestamp = get_uptime();
-  clock_t timestamp = 1234;
+// TODO: Clean this up
+typedef struct{
+  pid_t p_id;
+  clock_t timestamp;
+  char *from_state;
+  char *to_state;
+} buffer_entry;
+
+#define buffer_size  5
+
+buffer_entry log_buffer[buffer_size];
+int buffer_index = 0;
+int buffer_full = 0;
+
+void log_state_change(pid_t p_id, clock_t timestamp, int from, int to){
   char *fromState = get_state_string(from);
   char *toState = get_state_string(to);
 
+  if(buffer_index >= buffer_size){
+    buffer_full = 1;
+    buffer_index = 0;
+  }
 
-  // 
-  // struct proc *const caller_ptr = get_cpulocal_var(proc_ptr);	/* get pointer to caller */
-  // endpoint_t src_dst_e = ;				/* src or dst process */
+  if(buffer_full && to != 2){
+    // print the buffer
+    for(int i=0; i<buffer_size; i++){
+      buffer_entry current = log_buffer[i];
+      printf("%d\t%d\t%s\t%s\n", current.p_id, current.timestamp, current.from_state, current.to_state);
+    }
+    buffer_full = 0;
+    buffer_index = 0;
+  }
 
+  buffer_entry new_item = {.p_id = p_id, .timestamp = timestamp, .from_state = fromState, .to_state = toState};
+  log_buffer[buffer_index++] = new_item;
 
-
-  // TODO: Write instead of printing
-  printf("%d\t%d\t%s\t%s\n", p_id, timestamp, fromState, toState);
+  // If its a terminate just print this no matter what.
+  if(to == 4){
+    for(int i=0; i<buffer_index; i++){
+      buffer_entry current = log_buffer[i];
+      printf("%d\t%d\t%s\t%s\n", current.p_id, current.timestamp, current.from_state, current.to_state);
+    }
+    buffer_full = 0;
+    buffer_index = 0;
+  }
 }

@@ -12,14 +12,3 @@ typedef struct{
   int full;
   plog_item items[PLOG_BUFFER_SIZE];
 } plog_buffer;
-
-
-// PLOG State tracking
-typedef enum {NEW, CRTD, RDY, RUN, BLK, TERM} state;
-
-typedef struct{
-  pid_t i_pid;
-  int timestamp;
-  state from_state;
-  state to_state;
-} plog_state_item;

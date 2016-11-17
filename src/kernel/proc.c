@@ -64,6 +64,14 @@ static void enqueue_head(struct proc *rp);
 /* all idles share the same idle_priv structure */
 static struct priv idle_priv;
 
+
+// Utility function for getting the time
+static int get_plog_time(){
+	int boottime_ms = boottime*1000;
+	int realtime_ms = (get_uptime() * 1000)/system_hz;
+	return boottime_ms + realtime_ms;
+}
+
 static void set_idle_name(char * name, int n)
 {
         int i, c;
@@ -1581,7 +1589,8 @@ void enqueue(
 #endif
 
 	if(rp->is_tracked){
-		log_state_change(rp->p_id, rp->p_state, 1);
+		clock_t timestamp = get_plog_time();
+		log_state_change(rp->p_id, timestamp, rp->p_state, 1);
 		rp->p_state = 1;
 	}
 }
@@ -1639,7 +1648,8 @@ static void enqueue_head(struct proc *rp)
 #endif
 
 	if(rp->is_tracked){
-		log_state_change(rp->p_id, rp->p_state, 1);
+		clock_t timestamp = get_plog_time();
+		log_state_change(rp->p_id, timestamp, rp->p_state, 1);
 		rp->p_state = 1;
 	}
 }
@@ -1710,7 +1720,8 @@ void dequeue(struct proc *rp)
   assert(runqueues_ok_local());
 #endif
 	if(rp->is_tracked){
-		log_state_change(rp->p_id, rp->p_state, 3);
+		clock_t timestamp = get_plog_time();
+		log_state_change(rp->p_id, timestamp, rp->p_state, 3);
 		rp->p_state = 3;
 	}
 }
@@ -1745,10 +1756,11 @@ static struct proc * pick_proc(void)
 		if (priv(rp)->s_flags & BILLABLE)
 			get_cpulocal_var(bill_ptr) = rp; /* bill for system time */
 
-		// if(rp->is_tracked){
-		// 	log_state_change(rp->p_id, rp->p_state, 2);
-		// 	rp->p_state = 2;
-		// }
+		if(rp->is_tracked){
+			clock_t timestamp = get_plog_time();
+			log_state_change(rp->p_id, timestamp, rp->p_state, 2);
+			rp->p_state = 2;
+		}
 		return rp;
   }
   return NULL;

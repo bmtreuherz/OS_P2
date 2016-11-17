@@ -1,4 +1,4 @@
-.\" Copyright (c) 2016 Sergeant Long Dick
+.\" Copyright (c) 2016 Sergeant DLD
 .\" All rights reserved.  The Berkeley software License Agreement
 .\" specifies the terms and conditions for redistribution.
 .\"
@@ -8,7 +8,7 @@
 .UC 4
 .SH NAME
 start_plog, stop_plog, reset_plog, get_plog_size, get_plog_byPID,
-get_plog_byindex \- interface with the process log
+get_plog_byindex, plog_state_start, plog_state_stop \- interface with the process log
 .SH SYNOPSIS
 .nf
 .ft B
@@ -20,6 +20,8 @@ void reset_plog(void)
 int get_plog_size(void)
 int get_plog_byPID(int, long *, long *)
 int get_plog_byindex(int, long *, long *)
+int plog_state_start(int)
+int plog_state_stop(int)
 .fi
 .SH DESCRIPTION
 .PP
@@ -44,3 +46,17 @@ If the PID is not present, it will return an error value of 2.
 takes an index for the entry to read as the first argument, with pointers
 to store the creation time and termination time. If the index is out of range,
 it will return an error value of 3.
+.PP
+.B plog_state_start
+takes a pid as an argument. This will will start process tracking for
+a particular process with that pid. If 0 is given, it will start tracking for
+all processes that are currently in the process table. If the pid is valid (or 0),
+this function returns 0. If the pid is not found, a status of 1 is returned. If the pid
+is not valid (i.e. it is for a system process), 2 is returned.
+.PP
+.B plog_state_stop
+takes a pid as an argument. This will will stop process tracking for
+a particular process with that pid. If 0 is given, it will stop tracking for
+all processes that are currently in the process table. If the pid is valid (or 0),
+this function returns 0. If the pid is not found, a status of 1 is returned. If the pid
+is not valid (i.e. it is for a system process), 2 is returned.
